@@ -4,6 +4,13 @@ struct Scanner {
     let exiftool: URL?
     let ffprobe: URL?
 
+    private static let exifDateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.dateFormat = "yyyy:MM:dd HH:mm:ss"
+        return formatter
+    }()
+
     private static let photoExtensions: Set<String> = ["jpg", "jpeg"]
     private static let videoExtensions: Set<String> = ["avi"]
 
@@ -61,7 +68,14 @@ struct Scanner {
         if let exiftool, !photos.isEmpty {
             let fixes = try readFixes(photos, exiftool: exiftool)
             for index in files.indices where files[index].kind == .photo {
-                files[index].fix = fixes[files[index].source.path]
+                var fix = fixes[files[index].source.path]
+                if fix?.addsDate == true {
+                    let date = Self.exifDateFormatter.string(from: files[index].taken)
+                    fix?.modifyDate = date
+                    fix?.dateTimeOriginal = date
+                    fix?.createDate = date
+                }
+                files[index].fix = fix
             }
         }
         return files
@@ -89,6 +103,7 @@ struct Scanner {
             guard let path = entry["SourceFile"] as? String else { continue }
             let exifWidth = int(entry["ExifImageWidth"])
             let exifHeight = int(entry["ExifImageHeight"])
+            let hasDate = ["ModifyDate", "DateTimeOriginal", "CreateDate"].contains { entry[$0] != nil }
             fixes[path] = ExifFix(
                 modifyDate: Self.fixDate(entry["ModifyDate"] as? String),
                 dateTimeOriginal: Self.fixDate(entry["DateTimeOriginal"] as? String),
@@ -96,7 +111,8 @@ struct Scanner {
                 width: Self.fixDimension(exifWidth, actual: int(entry["ImageWidth"])),
                 height: Self.fixDimension(exifHeight, actual: int(entry["ImageHeight"])),
                 originalWidth: exifWidth,
-                originalHeight: exifHeight
+                originalHeight: exifHeight,
+                addsDate: !hasDate
             )
         }
         return fixes

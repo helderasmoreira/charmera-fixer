@@ -8,11 +8,14 @@ It's a native port of [kodak-charmera-exif-fixer](https://github.com/RAIT-09/kod
 
 | File | Problem | Fix |
 |---|---|---|
+| Photo | No EXIF at all, so no date taken | Dates written from the camera's clock |
 | Photo | EXIF dates look like `2026:03:03:12:16:29` | Rewritten as `2026:03:03 12:16:29` |
 | Photo | EXIF says 640×480, the image is 1440×1080 | EXIF size set to the real size |
 | Photo | Corrupt MakerNote stops EXIF from being written | EXIF block rebuilt first |
 | Video | Embedded date is always 2010-06-29 | Date set to when recording started |
 | Video | Motion JPEG AVI with PCM audio | Converted to H.264/AAC MP4 |
+
+Which photo problems show up depends on the camera's firmware. Some Charmeras save bare JPEGs with no EXIF, others save the broken EXIF in the next three rows. The image data is never re-encoded.
 
 Files are copied to `~/Pictures/KodakCharmera` (configurable) as `IMG_yyyyMMdd_HHmmss.jpg` and `VID_yyyyMMdd_HHmmss.mp4`, with their file dates set to when they were taken. Nothing on the camera is changed.
 

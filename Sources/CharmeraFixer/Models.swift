@@ -29,6 +29,7 @@ struct ExifFix {
     var height: Int?
     var originalWidth: Int?
     var originalHeight: Int?
+    var addsDate = false
 
     var fixesDate: Bool { modifyDate != nil || dateTimeOriginal != nil || createDate != nil }
     var fixesDimensions: Bool { width != nil || height != nil }
@@ -54,7 +55,11 @@ struct CameraFile: Identifiable {
         case .photo:
             guard let fix, fix.hasFixes else { return "None needed" }
             var parts: [String] = []
-            if fix.fixesDate { parts.append("Date format") }
+            if fix.addsDate {
+                parts.append("Add date")
+            } else if fix.fixesDate {
+                parts.append("Date format")
+            }
             if fix.fixesDimensions {
                 let from = "\(fix.originalWidth ?? 0)×\(fix.originalHeight ?? 0)"
                 let to = "\(fix.width ?? fix.originalWidth ?? 0)×\(fix.height ?? fix.originalHeight ?? 0)"

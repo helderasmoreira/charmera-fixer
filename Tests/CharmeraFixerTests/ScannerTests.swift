@@ -27,4 +27,7 @@ func leavesOtherDatesAlone(_ raw: String?) {
 
     file.fix = ExifFix(modifyDate: "2026:03:03 12:16:29", width: 1440, height: 1080, originalWidth: 640, originalHeight: 480)
     #expect(file.fixDescription == "Date format, Size 640×480 → 1440×1080")
+
+    file.fix = ExifFix(modifyDate: "2026:03:03 12:16:29", addsDate: true)
+    #expect(file.fixDescription == "Add date")
 }
