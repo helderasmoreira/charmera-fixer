@@ -91,7 +91,7 @@ struct ContentView: View {
             TableColumn("File") { file in
                 Label(file.name, systemImage: file.kind == .photo ? "photo" : "video")
             }
-            .width(min: 140, ideal: 170)
+            .width(min: 140, ideal: 150)
             TableColumn("Size") { file in
                 Text(ByteCountFormatter.string(fromByteCount: file.size, countStyle: .file))
                     .monospacedDigit()
@@ -102,15 +102,15 @@ struct ContentView: View {
                 Text(file.taken.formatted(date: .abbreviated, time: .shortened))
                     .foregroundStyle(.secondary)
             }
-            .width(min: 120, ideal: 150)
+            .width(min: 120, ideal: 140)
             TableColumn("Fixes") { file in
                 Text(file.fixDescription)
             }
-            .width(min: 140, ideal: 200)
+            .width(min: 160, ideal: 280)
             TableColumn("Status") { file in
                 StatusView(status: file.status)
             }
-            .width(min: 120, ideal: 150)
+            .width(min: 100, ideal: 110)
         }
     }
 
@@ -119,7 +119,7 @@ struct ContentView: View {
             HStack {
                 Text("Save to")
                     .foregroundStyle(.secondary)
-                Text(model.destination.path)
+                Text((model.destination.path as NSString).abbreviatingWithTildeInPath)
                     .lineLimit(1)
                     .truncationMode(.middle)
                 Button("Change…", action: model.chooseDestination)

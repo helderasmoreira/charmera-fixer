@@ -2,6 +2,8 @@
 
 A small macOS app that imports photos and videos from a Kodak Charmera keychain camera and fixes the metadata it gets wrong. Plug the camera in, check the list and click Import.
 
+![Charmera Fixer listing photos and videos from a camera with the fix each one needs](docs/screenshot.png)
+
 It's a native port of [kodak-charmera-exif-fixer](https://github.com/RAIT-09/kodak-charmera-exif-fixer) by RAIT-09.
 
 ## What it fixes
